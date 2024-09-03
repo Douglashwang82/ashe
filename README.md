@@ -1,4 +1,16 @@
-# ashe
-A web app let user upload snaps and translate word in it.
+Language Tutor Application
 
-test
+Features:
+    - Chatbot tutor
+    - User database
+    - *Conversation to clips
+
+
+Front end:
+
+Framework:
+    - Angular
+
+
+Back end:
+    - Flask
