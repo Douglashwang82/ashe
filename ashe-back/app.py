@@ -1,13 +1,16 @@
 from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
+from utils.logger_setup import setup_logger
 from services.communication_service import CommunicationService
-
+from services.message_service import MessageService
 
 app = Flask(__name__, static_folder='dist/language-tutor-frontend')
+logger = setup_logger('app')
 CORS(app)
 
 # Initialize the service
 communication_service = CommunicationService()
+message_service =MessageService(logger)
 
 @app.route('/')
 def index():
@@ -26,10 +29,17 @@ def get_languages():
 def communication():
     data = request.get_json()
     message = data.get('message')
-    print(f"Received message: {message}")
-    processed_message = communication_service.process_message(message)
-    print(f"Processed message: {processed_message}")
-    res = {'status': 'successful', "message": f"received {message}: processed {processed_message}"}
+    logger.info(f"Received message: {message}")
+
+    processed_message = message_service.process_message(message)
+    logger.info(f"Processed message: {processed_message['chatgpt_response']}")
+
+    res = {
+        'status': 'successful',
+        "received_message": f"{message}",
+        "processed_message": f"{processed_message['chatgpt_response']}",
+        }
+
     return jsonify(res)
 
 if __name__ == '__main__':
