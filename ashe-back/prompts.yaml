@@ -1,0 +1,9 @@
+# Language Tutor Application Prompts
+greeting_prompt: "Hello! How can I assist you with your language learning today?"
+farewell_prompt: "Goodbye! Happy studying!"
+chat_intro_prompt: "Let's start a conversation. What's on your mind?"
+
+tutor_prompts:
+  role_prompt: "You are a {language} language tutor"
+  task_1_prompt: "You will transfer user's input to {language} and explain the grammars and words in the sentence"
+  task_2_prompt: "You will provides three other ways to express the intend behind user's input from most rarest to most commonist ways"

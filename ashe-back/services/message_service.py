@@ -1,9 +1,10 @@
 import os
+import yaml
 from openai import OpenAI
 from utils.logger_setup import setup_logger
 
 class MessageService:
-    def __init__(self, logger):
+    def __init__(self):
         self.api_key = os.getenv("OPENAI_API_KEY")
         self.client  = OpenAI()
         self.logger = setup_logger('message_service')
@@ -19,18 +20,28 @@ class MessageService:
             'user_message': message,
             'chatgpt_response': chatgpt_response
         }
-        
+
         return response
 
     def get_chatgpt_response(self, user_message):
-        # OpenAI API call to ChatGPT
+        # Load the prompts
+        prompts = self.load_prompts()
+        
+        # Define the tutor
+        language = 'English'
+        mapped_prompts = []
+        for prompt_key in prompts['tutor_prompts']:
+            mapped_prompt = {"role": "system", "content": prompts['tutor_prompts'][prompt_key].format(language=language)}
+            mapped_prompts.append(mapped_prompt)
 
         # Define the chat messages, including the user's input
         messages = [
-            {"role": "system", "content": "You are a helpful language tutor."},
+            # Define the tutor
+            *mapped_prompts,
             {"role": "user", "content": user_message}
         ]
 
+        # OpenAI API call to ChatGPT
         try:
             completion = self.client.chat.completions.create(
                 model="gpt-3.5-turbo-0125",
@@ -43,3 +54,8 @@ class MessageService:
         except Exception as e:
             self.logger.error(f"Error communicating with ChatGPT: {e}")
             return "Sorry, there was an error processing your request."
+
+    def load_prompts(self):
+        with open("prompts.yaml", "r") as file:
+            prompts = yaml.safe_load(file)
+        return prompts
