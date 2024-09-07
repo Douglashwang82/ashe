@@ -10,7 +10,7 @@ CORS(app)
 
 # Initialize the service
 communication_service = CommunicationService()
-message_service =MessageService(logger)
+message_service =MessageService()
 
 @app.route('/')
 def index():
