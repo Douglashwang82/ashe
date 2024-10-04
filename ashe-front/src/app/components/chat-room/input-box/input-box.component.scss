@@ -1,0 +1,10 @@
+:host {
+    position: fixed;
+    height: 75px;
+
+    textarea {
+        display: flex;
+        margin: auto;
+        resize: none;
+    }
+}
